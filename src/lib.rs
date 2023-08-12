@@ -1,10 +1,12 @@
 use config::{get_input_config, SprintConfig};
 
 mod config;
+#[cfg(test)]
+mod tests;
 
-struct SprintCapacity {
-    proposed_sprint_points: f32,
-    sprint_capacity: f32,
+pub struct SprintCapacity {
+    pub proposed_sprint_points: f32,
+    pub sprint_capacity: f32,
 }
 
 pub fn run() {
@@ -17,7 +19,7 @@ pub fn run() {
     )
 }
 
-fn get_capacity(config: SprintConfig) -> SprintCapacity {
+pub fn get_capacity(config: SprintConfig) -> SprintCapacity {
     let total_days = config.days_per_sprint * config.team_members as f32;
     let capacity = 1.0 - config.days_of_leave / total_days;
     let proposed_sprint_points = capacity * config.total_sprint_points;
