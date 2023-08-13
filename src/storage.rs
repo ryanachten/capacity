@@ -1,5 +1,5 @@
 use std::{
-    fs::File,
+    fs::{self, File},
     io::{Read, Write},
 };
 
@@ -52,4 +52,12 @@ pub fn store_config(config: &SprintConfig) {
         Ok(_res) => return,
         Err(e) => println!("Error writing config file {}", e),
     };
+}
+
+pub fn reset_config() {
+    let result = fs::remove_file(FILE_NAME);
+    match result {
+        Ok(_res) => println!("Reset configuration successful"),
+        Err(e) => println!("Error resetting configuration: {}", e),
+    }
 }

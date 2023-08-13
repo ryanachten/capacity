@@ -73,7 +73,7 @@ fn get_user_confirmation(prompt_msg: &str) -> bool {
         .read_line(&mut input)
         .expect("Error reading user input");
 
-    match input.trim() {
+    match input.to_lowercase().trim() {
         "yes" => return true,
         "y" => return true,
         "no" => return false,

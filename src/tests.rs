@@ -2,7 +2,7 @@ use super::*;
 
 #[test]
 fn determines_full_capacity() {
-    let result = get_capacity(&SprintConfig {
+    let result = calculate_capacity(&SprintConfig {
         team_members: 1,
         total_sprint_points: 2.0,
         days_per_sprint: 1.0,
@@ -14,7 +14,7 @@ fn determines_full_capacity() {
 
 #[test]
 fn determines_no_capacity() {
-    let result = get_capacity(&SprintConfig {
+    let result = calculate_capacity(&SprintConfig {
         team_members: 1,
         total_sprint_points: 2.0,
         days_per_sprint: 1.0,
@@ -26,7 +26,7 @@ fn determines_no_capacity() {
 
 #[test]
 fn determines_reduced_capacity() {
-    let result = get_capacity(&SprintConfig {
+    let result = calculate_capacity(&SprintConfig {
         team_members: 4,
         total_sprint_points: 10.0,
         days_per_sprint: 14.0,

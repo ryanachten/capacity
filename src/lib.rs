@@ -1,5 +1,10 @@
+use args::RunMode;
 use config::{get_config, SprintConfig};
+use storage::reset_config;
 
+use crate::args::get_run_mode;
+
+mod args;
 mod config;
 mod storage;
 #[cfg(test)]
@@ -11,15 +16,23 @@ pub struct SprintCapacity {
 }
 
 pub fn run() {
+    let mode = get_run_mode();
+    match mode {
+        RunMode::ResetConfig => reset_config(),
+        _ => get_capacity(),
+    }
+}
+
+fn get_capacity() {
     let config = get_config();
-    let capacity = get_capacity(&config);
+    let capacity = calculate_capacity(&config);
     println!(
         "team proposed_sprint_points: {}. sprint_capacity: {}%",
         capacity.proposed_sprint_points, capacity.sprint_capacity
     )
 }
 
-pub fn get_capacity(config: &SprintConfig) -> SprintCapacity {
+pub fn calculate_capacity(config: &SprintConfig) -> SprintCapacity {
     let total_days = config.days_per_sprint * config.team_members as f32;
     let capacity = 1.0 - config.days_of_leave / total_days;
     let proposed_sprint_points = capacity * config.total_sprint_points;
