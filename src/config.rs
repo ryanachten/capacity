@@ -25,6 +25,22 @@ pub fn get_config() -> SprintConfig {
     }
 }
 
+pub fn print_config() {
+    let stored_config = load_config();
+    match stored_config {
+        Some(res) => {
+            println!("Current stored configuration...");
+            println!("Number of team members: {}", res.team_members);
+            println!(
+                "Sprint points at full capacity: {}",
+                res.total_sprint_points
+            );
+            println!("Total days per sprint: {}", res.days_per_sprint);
+        }
+        None => println!("No stored configuration"),
+    }
+}
+
 fn get_input_config() -> SprintConfig {
     println!("Configuring Capacity...");
 

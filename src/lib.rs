@@ -1,18 +1,17 @@
-use args::RunMode;
 use capacity::get_capacity;
+use cli::{get_run_mode, RunMode};
+use config::print_config;
 use storage::reset_config;
 
-use crate::args::get_run_mode;
-
-mod args;
 mod capacity;
+mod cli;
 mod config;
 mod storage;
 
 pub fn run() {
-    let mode = get_run_mode();
-    match mode {
+    match get_run_mode() {
         RunMode::ResetConfig => reset_config(),
+        RunMode::PrintConfig => print_config(),
         _ => get_capacity(),
     }
 }
