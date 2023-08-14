@@ -12,7 +12,7 @@ pub fn get_capacity() {
     let config = get_config();
     let capacity = calculate_capacity(&config);
     println!(
-        "team proposed_sprint_points: {}. sprint_capacity: {}%",
+        "Proposed sprint points: {:.1}, at {:.1}% team capacity",
         capacity.proposed_sprint_points, capacity.sprint_capacity
     )
 }

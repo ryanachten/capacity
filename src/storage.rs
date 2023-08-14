@@ -18,8 +18,7 @@ const FILE_NAME: &str = "config.json";
 pub fn load_config() -> Option<StorageConfig> {
     let mut file_contents = String::new();
 
-    let json_file = File::open(FILE_NAME);
-    match json_file {
+    match File::open(FILE_NAME) {
         Ok(mut file) => {
             file.read_to_string(&mut file_contents)
                 .expect("Error reading file contents");
@@ -30,10 +29,7 @@ pub fn load_config() -> Option<StorageConfig> {
     let storage_config = serde_json::from_str::<StorageConfig>(&file_contents);
     match storage_config {
         Ok(res) => return Some(res),
-        Err(e) => {
-            println!("Error reading config file {}", e);
-            return None;
-        }
+        Err(_e) => return None,
     }
 }
 
@@ -56,8 +52,7 @@ pub fn store_config(config: &SprintConfig) {
 
 pub fn reset_config() {
     let result = fs::remove_file(FILE_NAME);
-    match result {
-        Ok(_res) => println!("Reset configuration successful"),
-        Err(e) => println!("Error resetting configuration: {}", e),
+    if result.is_ok() {
+        println!("Reset configuration successful");
     }
 }

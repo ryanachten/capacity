@@ -10,8 +10,7 @@ pub struct SprintConfig {
 }
 
 pub fn get_config() -> SprintConfig {
-    let stored_config = load_config();
-    match stored_config {
+    match load_config() {
         Some(config) => {
             let days_of_leave = get_days_of_leave();
             return SprintConfig {
@@ -26,8 +25,7 @@ pub fn get_config() -> SprintConfig {
 }
 
 pub fn print_config() {
-    let stored_config = load_config();
-    match stored_config {
+    match load_config() {
         Some(res) => {
             println!("Current stored configuration...");
             println!("Number of team members: {}", res.team_members);
