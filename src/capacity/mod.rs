@@ -1,4 +1,5 @@
 use crate::config::{get_config, SprintConfig};
+use colored::Colorize;
 
 #[cfg(test)]
 mod tests;
@@ -12,8 +13,10 @@ pub fn get_capacity() {
     let config = get_config();
     let capacity = calculate_capacity(&config);
     println!(
-        "Proposed sprint points: {:.1}, at {:.1}% team capacity",
-        capacity.proposed_sprint_points, capacity.sprint_capacity
+        "👉 {} {:.1} sprint points, at {:.1}% team capacity",
+        "Capacity:".bold(),
+        capacity.proposed_sprint_points,
+        capacity.sprint_capacity
     )
 }
 

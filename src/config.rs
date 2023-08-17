@@ -1,6 +1,14 @@
-use std::io;
+use colored::Colorize;
+use std::io::{stdin, stdout, Write};
 
-use crate::storage::{load_config, store_config};
+use crate::{
+    print::{subheading, warning},
+    storage::{load_config, store_config},
+};
+
+const TEAM_MEMBERS_PREFIX: &str = "🙂 Number of team members";
+const SPRINT_POINTS_PREFIX: &str = "✋ Sprint points at full capacity";
+const DAYS_PER_SPRINT_PREFIX: &str = "📆 Total days this sprint";
 
 pub struct SprintConfig {
     pub team_members: i32,
@@ -12,6 +20,7 @@ pub struct SprintConfig {
 pub fn get_config() -> SprintConfig {
     match load_config() {
         Some(config) => {
+            subheading("Using stored configuration");
             let days_of_leave = get_days_of_leave();
             return SprintConfig {
                 days_of_leave,
@@ -27,24 +36,33 @@ pub fn get_config() -> SprintConfig {
 pub fn print_config() {
     match load_config() {
         Some(res) => {
-            println!("Current stored configuration...");
-            println!("Number of team members: {}", res.team_members);
+            subheading("Current stored configuration");
             println!(
-                "Sprint points at full capacity: {}",
-                res.total_sprint_points
+                "{}: {}",
+                TEAM_MEMBERS_PREFIX,
+                res.team_members.to_string().bold()
             );
-            println!("Total days per sprint: {}", res.days_per_sprint);
+            println!(
+                "{}: {}",
+                SPRINT_POINTS_PREFIX,
+                res.total_sprint_points.to_string().bold()
+            );
+            println!(
+                "{}: {}",
+                DAYS_PER_SPRINT_PREFIX,
+                res.days_per_sprint.to_string().bold()
+            );
         }
-        None => println!("No stored configuration"),
+        None => warning("No stored configuration"),
     }
 }
 
 fn get_input_config() -> SprintConfig {
-    println!("Configuring Capacity...");
+    subheading("Configuring capacity");
 
-    let team_members = get_user_input::<i32>("Number of team members");
-    let total_sprint_points = get_user_input::<f32>("Sprint points at full capacity");
-    let days_per_sprint = get_user_input::<f32>("Total days this sprint");
+    let team_members = get_user_input::<i32>(TEAM_MEMBERS_PREFIX);
+    let total_sprint_points = get_user_input::<f32>(SPRINT_POINTS_PREFIX);
+    let days_per_sprint = get_user_input::<f32>(DAYS_PER_SPRINT_PREFIX);
     let days_of_leave = get_days_of_leave();
 
     let config = SprintConfig {
@@ -54,7 +72,7 @@ fn get_input_config() -> SprintConfig {
         days_per_sprint,
     };
 
-    let store_result = get_user_confirmation("Store configuration for next time? (y/n)");
+    let store_result = get_user_confirmation("💾 Store configuration for next time? (y/n)");
     if store_result {
         store_config(&config);
     }
@@ -63,27 +81,29 @@ fn get_input_config() -> SprintConfig {
 }
 
 fn get_user_input<T: std::str::FromStr>(prompt_msg: &str) -> T {
-    println!("{}:", prompt_msg);
+    print!("{}: ", prompt_msg);
+    stdout().flush().unwrap();
 
     let mut input = String::new();
-    io::stdin()
+    stdin()
         .read_line(&mut input)
         .expect("Error reading user input");
 
     match input.trim().parse::<T>() {
         Ok(parsed_input) => return parsed_input,
         Err(_error) => {
-            println!("Error parsing '{}', try again...", input.trim());
+            warning(&format!("Invalid input '{}', try again...", input.trim()));
             return get_user_input(prompt_msg);
         }
     }
 }
 
 fn get_user_confirmation(prompt_msg: &str) -> bool {
-    println!("{}:", prompt_msg);
+    print!("{}: ", prompt_msg);
+    stdout().flush().unwrap();
 
     let mut input = String::new();
-    io::stdin()
+    stdin()
         .read_line(&mut input)
         .expect("Error reading user input");
 
@@ -93,12 +113,12 @@ fn get_user_confirmation(prompt_msg: &str) -> bool {
         "no" => return false,
         "n" => return false,
         _ => {
-            println!("Invalid input '{}', try again...", input.trim());
+            warning(&format!("Invalid input '{}', try again...", input.trim()));
             return get_user_confirmation(prompt_msg);
         }
     }
 }
 
 fn get_days_of_leave() -> f32 {
-    return get_user_input::<f32>("Total days of leave this sprint");
+    return get_user_input::<f32>("📆 Total days of leave this sprint");
 }

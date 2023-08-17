@@ -43,11 +43,9 @@ pub fn store_config(config: &SprintConfig) {
         serde_json::to_string(&storage_config).expect("Error serializing config for storage");
 
     let mut json_file = File::create(FILE_NAME).expect("Error creating config file for storage");
-
-    match json_file.write_all(json_config.as_bytes()) {
-        Ok(_res) => return,
-        Err(e) => println!("Error writing config file {}", e),
-    };
+    json_file
+        .write_all(json_config.as_bytes())
+        .expect("Error writing config file");
 }
 
 pub fn reset_config() {

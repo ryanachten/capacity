@@ -6,6 +6,7 @@ use storage::reset_config;
 mod capacity;
 mod cli;
 mod config;
+mod print;
 mod storage;
 
 pub fn run() {
