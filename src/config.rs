@@ -22,14 +22,14 @@ pub fn get_config() -> SprintConfig {
         Some(config) => {
             subheading("Using stored configuration");
             let days_of_leave = get_days_of_leave();
-            return SprintConfig {
+            SprintConfig {
                 days_of_leave,
                 team_members: config.team_members,
                 total_sprint_points: config.total_sprint_points,
                 days_per_sprint: config.days_per_sprint,
-            };
+            }
         }
-        None => return get_input_config(),
+        None => get_input_config(),
     }
 }
 
@@ -77,7 +77,7 @@ fn get_input_config() -> SprintConfig {
         store_config(&config);
     }
 
-    return config;
+    config
 }
 
 fn get_user_input<T: std::str::FromStr>(prompt_msg: &str) -> T {
@@ -90,10 +90,10 @@ fn get_user_input<T: std::str::FromStr>(prompt_msg: &str) -> T {
         .expect("Error reading user input");
 
     match input.trim().parse::<T>() {
-        Ok(parsed_input) => return parsed_input,
+        Ok(parsed_input) => parsed_input,
         Err(_error) => {
             warning(&format!("Invalid input '{}', try again...", input.trim()));
-            return get_user_input(prompt_msg);
+            get_user_input(prompt_msg)
         }
     }
 }
@@ -108,17 +108,17 @@ fn get_user_confirmation(prompt_msg: &str) -> bool {
         .expect("Error reading user input");
 
     match input.to_lowercase().trim() {
-        "yes" => return true,
-        "y" => return true,
-        "no" => return false,
-        "n" => return false,
+        "yes" => true,
+        "y" => true,
+        "no" => false,
+        "n" => false,
         _ => {
             warning(&format!("Invalid input '{}', try again...", input.trim()));
-            return get_user_confirmation(prompt_msg);
+            get_user_confirmation(prompt_msg)
         }
     }
 }
 
 fn get_days_of_leave() -> f32 {
-    return get_user_input::<f32>("📆 Total days of leave this sprint");
+    get_user_input::<f32>("📆 Total days of leave this sprint")
 }

@@ -22,5 +22,5 @@ pub fn get_run_mode() -> RunMode {
         return RunMode::PrintConfig;
     }
 
-    return RunMode::GetCapacity;
+    RunMode::GetCapacity
 }

@@ -26,8 +26,8 @@ pub fn calculate_capacity(config: &SprintConfig) -> SprintCapacity {
     let proposed_sprint_points = capacity * config.total_sprint_points;
     let sprint_capacity = capacity * 100.0;
 
-    return SprintCapacity {
+    SprintCapacity {
         proposed_sprint_points,
         sprint_capacity,
-    };
+    }
 }

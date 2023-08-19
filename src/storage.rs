@@ -28,8 +28,8 @@ pub fn load_config() -> Option<StorageConfig> {
 
     let storage_config = serde_json::from_str::<StorageConfig>(&file_contents);
     match storage_config {
-        Ok(res) => return Some(res),
-        Err(_e) => return None,
+        Ok(res) => Some(res),
+        Err(_e) => None,
     }
 }
 
