@@ -58,16 +58,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b4682ae6287fcf752ecaabbfcc7b6f9b72aa33933dc23a554d853aea8eea8635"
 
 [[package]]
-name = "capacity"
-version = "0.1.0"
-dependencies = [
- "clap",
- "colored",
- "serde",
- "serde_json",
-]
-
-[[package]]
 name = "cc"
 version = "1.0.82"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -275,6 +265,16 @@ dependencies = [
  "itoa",
  "ryu",
  "serde",
+]
+
+[[package]]
+name = "sprint"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "colored",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]

@@ -1,3 +1,3 @@
 fn main() {
-    capacity::run();
+    sprint::run();
 }
