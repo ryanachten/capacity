@@ -1,9 +1,11 @@
 use std::{
     fs::{self, File},
     io::{Read, Write},
+    path::PathBuf,
 };
 
 use crate::config::SprintConfig;
+use directories::ProjectDirs;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize)]
@@ -17,8 +19,9 @@ const FILE_NAME: &str = "config.json";
 
 pub fn load_config() -> Option<StorageConfig> {
     let mut file_contents = String::new();
+    let config_path = get_config_directory().join(FILE_NAME);
 
-    match File::open(FILE_NAME) {
+    match File::open(config_path) {
         Ok(mut file) => {
             file.read_to_string(&mut file_contents)
                 .expect("Error reading file contents");
@@ -33,6 +36,7 @@ pub fn load_config() -> Option<StorageConfig> {
     }
 }
 
+// TODO: replace use of expect with ? and Result
 pub fn store_config(config: &SprintConfig) {
     let storage_config = StorageConfig {
         team_members: config.team_members,
@@ -42,15 +46,37 @@ pub fn store_config(config: &SprintConfig) {
     let json_config =
         serde_json::to_string(&storage_config).expect("Error serializing config for storage");
 
-    let mut json_file = File::create(FILE_NAME).expect("Error creating config file for storage");
+    let config_directory = get_config_directory();
+    if !config_directory.exists() {
+        fs::create_dir_all(&config_directory).expect("Error creating config directory");
+    }
+
+    let config_file_path = config_directory.join(FILE_NAME);
+    let mut json_file =
+        File::create(config_file_path).expect("Error creating config file for storage");
     json_file
         .write_all(json_config.as_bytes())
         .expect("Error writing config file");
 }
 
 pub fn reset_config() {
-    let result = fs::remove_file(FILE_NAME);
+    let config_path = get_config_directory().join(FILE_NAME);
+
+    let result = fs::remove_file(config_path);
     if result.is_ok() {
         println!("Reset configuration successful");
     }
+}
+
+fn get_config_directory() -> PathBuf {
+    /*
+       Project directories are specific to each environment:
+       - Lin: /home/alice/.config/sprint
+       - Win: C:\Users\Alice\AppData\Roaming\sprint\capacity\config
+       - Mac: /Users/Alice/Library/Application Support/com.sprint.capacity
+    */
+    let project_directory =
+        ProjectDirs::from("com", "sprint", "capacity").expect("Couldn't get project directory");
+
+    return project_directory.config_dir().to_path_buf();
 }
