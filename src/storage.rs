@@ -1,6 +1,6 @@
 use std::{
     fs::{self, File},
-    io::{Read, Write},
+    io::{Error, Read, Write},
     path::PathBuf,
 };
 
@@ -36,27 +36,24 @@ pub fn load_config() -> Option<StorageConfig> {
     }
 }
 
-// TODO: replace use of expect with ? and Result
-pub fn store_config(config: &SprintConfig) {
+pub fn store_config(config: &SprintConfig) -> Result<PathBuf, Error> {
     let storage_config = StorageConfig {
         team_members: config.team_members,
         total_sprint_points: config.total_sprint_points,
         days_per_sprint: config.days_per_sprint,
     };
-    let json_config =
-        serde_json::to_string(&storage_config).expect("Error serializing config for storage");
+    let json_config = serde_json::to_string(&storage_config)?;
 
     let config_directory = get_config_directory();
     if !config_directory.exists() {
-        fs::create_dir_all(&config_directory).expect("Error creating config directory");
+        fs::create_dir_all(&config_directory)?;
     }
 
     let config_file_path = config_directory.join(FILE_NAME);
-    let mut json_file =
-        File::create(config_file_path).expect("Error creating config file for storage");
-    json_file
-        .write_all(json_config.as_bytes())
-        .expect("Error writing config file");
+    let mut json_file = File::create(config_file_path)?;
+    json_file.write_all(json_config.as_bytes())?;
+
+    Ok(config_directory)
 }
 
 pub fn reset_config() {

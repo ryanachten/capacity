@@ -74,7 +74,7 @@ fn get_input_config() -> SprintConfig {
 
     let store_result = get_user_confirmation("💾 Store configuration for next time? (y/n)");
     if store_result {
-        store_config(&config);
+        store_config(&config).expect("Error storing sprint configuration");
     }
 
     config
